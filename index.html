@@ -1,100 +1,421 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>صدای پرواز واحساس | سایت موزیک</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8">
 
-    body {
-      margin: 0;
-      font-family: Tahoma, Arial, sans-serif;
-      background: linear-gradient(135deg, #111827, #312e81, #7c2d12);
-      color: white;
-      min-height: 100vh;
-    }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    header {
-      text-align: center;
-      padding: 45px 20px 30px;
-    }
+<title>صدای پرواز | موزیک</title>
 
-    header h1 {
-      font-size: 38px;
-      margin: 0 0 10px;
-    }
+<link rel="stylesheet" href="style.css">
 
-    header p {
-      color: #ddd;
-      font-size: 17px;
-    }
-
-    .music-box {
-      width: 90%;
-      max-width: 700px;
-      margin: 25px auto;
-      padding: 25px;
-      border-radius: 25px;
-      background: rgba(255,255,255,0.12);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 10px 35px rgba(0,0,0,0.3);
-    }
-
-    .music-box h2 {
-      margin-top: 0;
-    }
-
-    audio {
-      width: 100%;
-      margin-top: 15px;
-    }
-
-    .song {
-      margin-top: 20px;
-      padding: 18px;
-      border-radius: 18px;
-      background: rgba(0,0,0,0.25);
-    }
-
-    footer {
-      text-align: center;
-      padding: 40px 10px;
-      color: #ccc;
-    }
-  </style>
 </head>
+
 
 <body>
 
-  <header>
-    <h1>🎵 صدای پرواز</h1>
-    <p>موسیقی، عشق و احساس</p>
-  </header>
 
-  <div class="music-box">
+<header>
 
-    <div class="song">
-      <h2>🎶 آهنگ‌های من</h2>
-      <p>به‌زودی آهنگ‌های جدید اینجا قرار می‌گیرند.</p>
+<h1>🎵 صدای پرواز</h1>
 
-      <audio controls>
-        <audio>
-    <source src="music.mp3" type="audio/mpeg">
-    مرورگر شما از پخش موسیقی پشتیبانی نمی‌کند.
-</audio>
-    
-    
-  
+<p>آرشیو موسیقی و احساس</p>
 
-  </div>
 
-  <footer>
-    © 2026 صدای پرواز
-  </footer>
+<input 
+type="text"
+id="search"
+placeholder="🔍 جستجوی آهنگ یا خواننده..."
+>
 
-</body>
+
+</header>
+
+
+
+<div class="player">
+
+
+<img id="cover" src="images/cover1.jpg">
+
+
+<h2 id="title">
+انتخاب آهنگ
+</h2>
+
+
+<p id="artist"></p>
+
+
+<audio id="audio" controls></audio>
+
+
+<div>
+
+<button onclick="prevSong()">
+قبلی
+</button>
+
+
+<button onclick="nextSong()">
+بعدی
+</button>
+
+</div>
+
+
+</div>
+
+
+
+
+<div id="playlist"></div>
+
+
+
+
+<script src="script.js"></script>
+
+const songs = [
+
+
+{
+title:"پرواز عشق",
+artist:"صدای پرواز",
+file:"music/song1.mp3",
+cover:"images/cover1.jpg"
+},
+
+
+{
+title:"آسمان من",
+artist:"صدای پرواز",
+file:"music/song2.mp3",
+cover:"images/cover2.jpg"
+},
+
+
+{
+title:"خاطره",
+artist:"صدای پرواز",
+file:"music/song3.mp3",
+cover:"images/cover3.jpg"
+}
+
+
+];
+
+
+
+let current = 0;
+
+
+const audio =
+document.getElementById("audio");
+
+
+const title =
+document.getElementById("title");
+
+
+const artist =
+document.getElementById("artist");
+
+
+const cover =
+document.getElementById("cover");
+
+
+const playlist =
+document.getElementById("playlist");
+
+
+
+
+function loadSong(i){
+
+current=i;
+
+let song=songs[i];
+
+
+title.innerHTML=song.title;
+
+artist.innerHTML=song.artist;
+
+cover.src=song.cover;
+
+audio.src=song.file;
+
+}
+
+
+
+
+function showList(list=songs){
+
+
+playlist.innerHTML="";
+
+
+list.forEach((song,index)=>{
+
+
+let div=document.createElement("div");
+
+
+div.className="song";
+
+
+div.innerHTML=
+
+`
+<img src="${song.cover}">
+
+<div>
+
+<h3>${song.title}</h3>
+
+<p>${song.artist}</p>
+
+</div>
+`;
+
+
+
+div.onclick=function(){
+
+loadSong(index);
+
+audio.play();
+
+};
+
+
+playlist.appendChild(div);
+
+
+
+});
+
+
+}
+
+
+
+function nextSong(){
+
+current++;
+
+if(current>=songs.length)
+
+current=0;
+
+
+loadSong(current);
+
+audio.play();
+
+}
+
+
+
+
+function prevSong(){
+
+current--;
+
+if(current<0)
+
+current=songs.length-1;
+
+
+loadSong(current);
+
+audio.play();
+
+}
+
+
+
+
+document
+.getElementById("search")
+.addEventListener("input",function(){
+
+
+let text=this.value;
+
+
+let result=songs.filter(s=>
+
+s.title.includes(text) ||
+s.artist.includes(text)
+
+);
+
+
+showList(result);
+
+
+});
+
+
+
+showList();
+
+loadSong(0);
+</body>*{
+
+box-sizing:border-box;
+font-family:tahoma;
+
+}
+
+
+body{
+
+margin:0;
+
+background:
+linear-gradient(135deg,#020617,#4c1d95);
+
+color:white;
+
+}
+
+
+
+header{
+
+text-align:center;
+
+padding:40px 20px;
+
+}
+
+
+
+input{
+
+width:90%;
+
+max-width:500px;
+
+padding:15px;
+
+border-radius:30px;
+
+border:none;
+
+}
+
+
+
+.player{
+
+width:90%;
+
+max-width:500px;
+
+margin:auto;
+
+background:#ffffff20;
+
+padding:25px;
+
+border-radius:25px;
+
+text-align:center;
+
+}
+
+
+
+.player img{
+
+width:220px;
+
+height:220px;
+
+border-radius:20px;
+
+object-fit:cover;
+
+}
+
+
+
+audio{
+
+width:100%;
+
+margin:20px 0;
+
+}
+
+
+
+button{
+
+padding:10px 25px;
+
+border:none;
+
+border-radius:20px;
+
+background:#a855f7;
+
+color:white;
+
+}
+
+
+
+#playlist{
+
+width:90%;
+
+max-width:600px;
+
+margin:30px auto;
+
+}
+
+
+
+.song{
+
+display:flex;
+
+align-items:center;
+
+gap:15px;
+
+background:#ffffff20;
+
+padding:15px;
+
+margin:10px 0;
+
+border-radius:20px;
+
+}
+
+
+
+.song img{
+
+width:70px;
+
+height:70px;
+
+border-radius:15px;
+
+object-fit:cover;
+
+}
+
 </html>
